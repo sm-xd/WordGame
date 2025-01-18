@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const API_URL = 'https://api.api-ninjas.com/v1/randomword'; // Replace with actual API URL
-const apiKey = 'w7I+1R1jUrw/J1he9NF+JQ==osNbkLQFv8oO4jQ0';
+// const API_URL = import.meta.env.API_URL;
+// const apiKey = import.meta.env.API_KEY;
+const API_URL = "https://api.api-ninjas.com/v1/randomword";
+const apiKey = "w7I+1R1jUrw/J1he9NF+JQ==osNbkLQFv8oO4jQ0";
 
 export const useWordGame = () => {
   const [word, setWord] = useState('');
@@ -18,19 +20,28 @@ export const useWordGame = () => {
           'X-Api-Key': apiKey
         }
       });
+  
+      // Log response status and text to see if it’s returning HTML
+      const responseText = await response.text();
+    //   console.log('Response Status:', response.status);
+    //   console.log('Response Text:', responseText);
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const data = await response.json();
+  
+      // Try to parse as JSON if the response is not HTML
+      const data = JSON.parse(responseText);
       if (!data.word) {
         throw new Error('No word received from API');
       }
-      setWord(data.word.toUpperCase());
+      setWord(data.word[0].toUpperCase());
     } catch (error) {
       console.error('Error fetching word:', error);
       setWord('REACT');
     }
   };
+  
 
   useEffect(() => {
     const fetchWordAndSetState = async () => {

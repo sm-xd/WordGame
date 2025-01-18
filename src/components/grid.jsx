@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Grid = ({ word, guesses, currentGuess }) => {
-  const emptyRows = Array(6 - guesses.length - 1).fill('');
+    const emptyRows = Array(Math.max(0, 6 - guesses.length - 1)).fill('');
 
   const getCellClass = (letter, index, isSubmittedGuess) => {
     if (!isSubmittedGuess) return '';
