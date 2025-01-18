@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const API_URL = import.meta.env.API_URL;
-const apiKey = import.meta.env.API_KEY;
+const API_URL = import.meta.env.VITE_API_URL;
+const apiKey = import.meta.env.VITE_API_KEY;
 
 export const useWordGame = () => {
   const [word, setWord] = useState('');
