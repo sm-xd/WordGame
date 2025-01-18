@@ -11,8 +11,6 @@ export const useWordGame = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchWord = async () => {
-    console.log(API_URL );
-    console.log(API_KEY );
     try {
       const response = await fetch(API_URL, {
         method: 'GET',
