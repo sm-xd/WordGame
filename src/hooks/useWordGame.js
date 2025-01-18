@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
-// const API_URL = import.meta.env.API_URL;
-// const apiKey = import.meta.env.API_KEY;
-const API_URL = "https://api.api-ninjas.com/v1/randomword";
-const apiKey = "w7I+1R1jUrw/J1he9NF+JQ==osNbkLQFv8oO4jQ0";
+const API_URL = import.meta.env.API_URL;
+const apiKey = import.meta.env.API_KEY;
 
 export const useWordGame = () => {
   const [word, setWord] = useState('');
