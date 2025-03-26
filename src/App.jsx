@@ -4,10 +4,12 @@ import Keyboard from './components/keyboard';
 import Message from './components/message';
 import { useWordGame } from './hooks/useWordGame';
 import './App.css';
+import Hint from './components/hint';
 
 const App = () => {
   const {
     word,
+    hint,
     guesses,
     currentGuess,
     gameStatus,
@@ -43,6 +45,7 @@ const App = () => {
     <div className="app">
       <h1>Word Guessing Game</h1>
       <Grid word={word} guesses={guesses} currentGuess={currentGuess} />
+
       <Keyboard
         onKeyPress={handleKeyPress}
         onEnter={handleEnter}
@@ -50,6 +53,7 @@ const App = () => {
         guesses={guesses}
         word={word}
       />
+      <Hint hint={hint}/>
       <Message gameStatus={gameStatus} word={word} />
     </div>
   );

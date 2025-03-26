@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL;
-const apiKey = import.meta.env.VITE_API_KEY;
+// const apiKey = import.meta.env.VITE_API_KEY;
 
 export const useWordGame = () => {
   const [word, setWord] = useState('');
@@ -9,38 +9,57 @@ export const useWordGame = () => {
   const [currentGuess, setCurrentGuess] = useState('');
   const [gameStatus, setGameStatus] = useState('playing');
   const [isLoading, setIsLoading] = useState(true);
+  const [hint, setHint] = useState('No hint');
 
   const fetchWord = async () => {
     try {
-      const response = await fetch(API_URL, {
-        method: 'GET',
-        headers: {
-          'X-Api-Key': apiKey
-        }
-      });
+      const response = await fetch(API_URL, { method: 'GET' });
   
-      // Log response status and text to see if it’s returning HTML
       const responseText = await response.text();
-    //   console.log('Response Status:', response.status);
-    //   console.log('Response Text:', responseText);
+      console.log('Response Status:', response.status);
+      console.log('Response Text:', responseText);
   
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
   
-      // Try to parse as JSON if the response is not HTML
-      const data = JSON.parse(responseText);
-      if (!data.word) {
-        throw new Error('No word received from API');
+      const words = JSON.parse(responseText);
+      if (!words.length) {
+        throw new Error('No words received from API');
       }
-      setWord(data.word[0].toUpperCase());
+  
+      let hint = null;
+      let selectedWord = null;
+  
+      for (const word of words) {
+        const hintUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
+        const responseHint = await fetch(hintUrl, { method: 'GET' });
+  
+        if (responseHint.ok) {
+          const hintData = await responseHint.json();
+          const definition = hintData[0]?.meanings[0]?.definitions[0]?.definition;
+  
+          if (definition) {
+            selectedWord = word;
+            hint = definition;
+            break; // Stop after finding the first valid word and hint
+          }
+        }
+      }
+  
+      if (!selectedWord || !hint) {
+        throw new Error('No valid hint found');
+      }
+      console.log(hint);
+      setWord(selectedWord.toUpperCase());
+      setHint(hint);
     } catch (error) {
       console.error('Error fetching word:', error);
       setWord('REACT');
+      setHint('A JavaScript library for building user interfaces.');
     }
   };
   
-
   useEffect(() => {
     const fetchWordAndSetState = async () => {
       setIsLoading(true);
@@ -79,6 +98,7 @@ export const useWordGame = () => {
 
   return {
     word,
+    hint,
     guesses,
     currentGuess,
     gameStatus,
